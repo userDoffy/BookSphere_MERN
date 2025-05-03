@@ -11,7 +11,6 @@ import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { login, logout } from "./redux/auth/authSlice.js";
-import axios from "axios";
 import { getCurrentUser } from "./axios/authApi.js";
 
 function App() {
@@ -22,8 +21,8 @@ function App() {
       try {
         const res = await getCurrentUser();
         if (res.status === 200) {
-          const { name, role,profilepic } = res.data.user;
-          dispatch(login({ token: true, name, role, profilepic }));
+          const { name, _id,profilepic } = res.data.user;
+          dispatch(login({ token: true, name, _id, profilepic }));
         }
       } catch (err) {
         dispatch(logout());

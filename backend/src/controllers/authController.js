@@ -2,8 +2,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Users from "../models/userModel.js";
 import { sendOtpEmail } from "../utils/nodemailer.js";
-import fs from "fs";
-import path from "path";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -174,36 +172,6 @@ export const getCurrentUser = async (req, res) => {
   const host = req.protocol + "://" + req.get("host");
   const profilepic = user.profilepic ? `${host}${user.profilepic}` : "";
 
-  res.status(200).json({ status: "success", user: { name,email,address,phone,role,profilepic,isAccountVerified } });
+  res.status(200).json({ status: "success", user: {_id, name,email,address,phone,role,profilepic,isAccountVerified } });
 };
 
-export const updateUserProfile = async (req, res) => {
-  try {
-    const userId = req.user._id;
-
-    const updates = {
-      name: req.body.name,
-      phone: req.body.phone,
-      address: req.body.address,
-    };
-
-    // Handle profile picture upload
-    if (req.file) {
-      const newPicPath = `/uploads/profilepics/${req.file.filename}`;
-      updates.profilepic = newPicPath;
-
-      // Delete old profile pic if exists
-      const user = await Users.findById(userId);
-      if (user.profilepic && user.profilepic !== "") {
-        const oldPath = path.join("uploads", user.profilepic);
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-      }
-    }
-
-    const updatedUser = await Users.findByIdAndUpdate(userId, updates, { new: true });
-    res.status(200).json({ success: true, user: updatedUser });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to update profile" });
-  }
-};

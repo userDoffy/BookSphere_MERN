@@ -1,11 +1,11 @@
 import axiosInstance from "./axiosInstance";
 
 export const getCurrentUser = () => {
-  return axiosInstance.get("/auth/getcurrentuser");
+  return axiosInstance.get("/user/getcurrentuser");
 };
 
 export const updateUserProfile = (formData) => {
-  return axiosInstance.put("/auth/updateprofile", formData, {headers: { "Content-Type": "multipart/form-data" },});
+  return axiosInstance.put("/user/updateprofile", formData, {headers: { "Content-Type": "multipart/form-data" },});
 };
 
 export const placeOrderStripe = (books, totalPrice) => {
@@ -20,4 +20,16 @@ export const verifyKhaltiPayment = (pidx,orderId) => {
 }
 export const getOrders = () => {  
   return axiosInstance.get("/order/getOrders");
+}
+
+export const getBooksByUser = () => {
+  return axiosInstance.get("/user/getbooksbyuser");
+};
+
+export const addReview = (bookId, reviewData) => {
+  return axiosInstance.post(`/user/books/${bookId}/review`, {reviewData});
+};
+
+export const getBookForUser = (bookId) => {
+  return axiosInstance.get(`/user/getbookforuser/${bookId}`);
 }

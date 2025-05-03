@@ -8,6 +8,7 @@ import Myorders from "../pages/User/Myorders.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import Checkout from "../pages/User/Checkout.jsx";
 import VerifyCheckout from "../pages/User/VerifyCheckout.jsx";
+import ReadBook from "../pages/User/ReadBook.jsx";
 
 const UserRoutes = [
   <Route
@@ -19,6 +20,8 @@ const UserRoutes = [
     <Route path="myorders" element={<Myorders />} />
     <Route path="checkout" element={<Checkout />} />
     <Route path="verify-checkout" element={<VerifyCheckout />} />
+    
+    <Route path="readbook/:id" element={<ReadBook />} />
   </Route>,
 ];
 

@@ -5,21 +5,21 @@ export const authSlice = createSlice({
   initialState: {
     token:  false,
     name:  null,
-    role:  null,
+    userid:  null,
     profilepic: null,
   },
   reducers: {
     login: (state, action) => {
       state.token = action.payload.token
       state.name = action.payload.name
-      state.role = action.payload.role
+      state.userid = action.payload._id
       state.profilepic = action.payload.profilepic
 
     },
     logout: state => {
       state.token = false
       state.name = null
-      state.role = null
+      state.userid = null
       state.profilepic = null
     },
   }

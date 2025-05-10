@@ -30,6 +30,3 @@ export const addReview = (bookId, reviewData) => {
   return axiosInstance.post(`/user/books/${bookId}/review`, {reviewData});
 };
 
-export const getBookForUser = (bookId) => {
-  return axiosInstance.get(`/user/getbookforuser/${bookId}`);
-}

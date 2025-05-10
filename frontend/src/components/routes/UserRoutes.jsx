@@ -21,7 +21,7 @@ const UserRoutes = [
     <Route path="checkout" element={<Checkout />} />
     <Route path="verify-checkout" element={<VerifyCheckout />} />
     
-    <Route path="readbook/:id" element={<ReadBook />} />
+    <Route path="readbook" element={<ReadBook />} />
   </Route>,
 ];
 

@@ -20,7 +20,7 @@ const BookDetails = () => {
   const [loading, setLoading] = useState(true);
 
   const { items } = useSelector((state) => state.cart);
-  const { token,name } = useSelector((state) => state.auth);
+  const { token, name } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -79,13 +79,13 @@ const BookDetails = () => {
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     try {
-      const bookId=id;
+      const bookId = id;
       const review = {
         rating: reviewData.rating,
         comment: reviewData.comment,
         username: name,
       };
-      
+
       await addReview(bookId, review);
       toast.success("Review submitted!");
       setReviewData({ rating: 5, comment: "" });
@@ -170,7 +170,11 @@ const BookDetails = () => {
                 </span>
                 <button
                   className="btn btn-outline-primary btn-sm"
-                  onClick={() => navigate(`/user/readbook/${book._id}`)}
+                  onClick={() =>
+                    navigate(`/user/readbook`, {
+                      state: { title: book.title, id: book._id },
+                    })
+                  }
                 >
                   <i className="bi bi-book"></i> Read Now
                 </button>

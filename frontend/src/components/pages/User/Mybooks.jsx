@@ -24,8 +24,8 @@ const Mybooks = () => {
     fetchBooks();
   }, []);
 
-  const handleView = (id) => {
-    navigate(`/user/readbook/${id}`);
+  const handleView = (title,id) => {
+    navigate(`/user/readbook`,{ state: { title:title, id: id } });
   };
 
   const handleReview = (id) => {
@@ -77,7 +77,7 @@ const Mybooks = () => {
                     <Button
                       variant="primary"
                       size="sm"
-                      onClick={() => handleView(book._id)}
+                      onClick={() => handleView(book.title,book._id)}
                     >
                       <Eye />
                     </Button>

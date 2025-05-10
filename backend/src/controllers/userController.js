@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 dotenv.config();
 import fs from "fs";
 import path from "path";
+import axios from "axios";
+import PDFDocument from "pdfkit";
+import stream from "stream";
+import iconv from "iconv-lite";
 
 export const getCurrentUser = async (req, res) => {
   const _id = req.user._id;
@@ -16,21 +20,19 @@ export const getCurrentUser = async (req, res) => {
   const host = req.protocol + "://" + req.get("host");
   const profilepic = user.profilepic ? `${host}${user.profilepic}` : "";
 
-  res
-    .status(200)
-    .json({
-      status: "success",
-      user: {
-        _id,
-        name,
-        email,
-        address,
-        phone,
-        role,
-        profilepic,
-        isAccountVerified,
-      },
-    });
+  res.status(200).json({
+    status: "success",
+    user: {
+      _id,
+      name,
+      email,
+      address,
+      phone,
+      role,
+      profilepic,
+      isAccountVerified,
+    },
+  });
 };
 
 export const updateUserProfile = async (req, res) => {
@@ -89,7 +91,7 @@ export const addReview = async (req, res) => {
     const userId = req.user._id;
     const bookId = req.params.bookId;
     const { rating, comment, username } = req.body.reviewData;
-    
+
     const user = await Users.findById(userId).populate("ownedBooks");
     const ownsBook = user.ownedBooks.some(
       (book) => book._id.toString() === bookId
@@ -134,28 +136,66 @@ export const addReview = async (req, res) => {
   }
 };
 
-export const getBookforUser = async (req, res) => {
-  const userId = req.user._id
+
+export const getBookPdf = async (req, res) => {
+  const userId = req.user._id;
   const bookId = req.params.bookId;
+
   try {
-    const user = await Users.findById(userId).populate("ownedBooks");
-    const ownsBook = user.ownedBooks.some(
-      (book) => book._id.toString() === bookId
-    );
+    // Step 1: Check if user owns the book
+    const user = await Users.findById(userId).populate('ownedBooks');
+    const ownsBook = user.ownedBooks.some(book => book._id.toString() === bookId);
     if (!ownsBook) {
-      return res
-        .status(403)
-        .json({ success: false, message: "You do not own this book" });
+      return res.status(403).json({ message: 'You do not own this book' });
     }
 
+    // Step 2: Fetch the book and validate its URL
     const book = await Books.findById(bookId);
-    if (!book) {
-      return res.status(404).json({ success: false, message: "Book not found" });
+    if (!book || !book.pdf_url.endsWith('.txt')) {
+      return res.status(404).json({ message: 'Book or text version not found' });
     }
 
-    res.status(200).json({ success: true, book });
+    // Step 3: Fetch the raw text file from Gutenberg
+    const response = await axios.get(book.pdf_url, { responseType: 'arraybuffer' });
+    const rawBuffer = Buffer.from(response.data);
+
+    // Step 4: Decode using best-guess encoding (fallback to windows-1252 if UTF-8 has garbage)
+    let textContent = iconv.decode(rawBuffer, 'utf-8');
+    if (textContent.includes('Ð')) {
+      textContent = iconv.decode(rawBuffer, 'windows-1252');
+    }
+
+    // Step 5: Clean and normalize the text
+    textContent = textContent
+      .replace(/Ð/g, '') // Remove stray Ð characters
+      .replace(/\r\n/g, '\n') // Normalize line endings
+      .replace(/\n{3,}/g, '\n\n') // Collapse multiple newlines
+      .replace(/[^\x00-\x7F]+/g, '') // Strip remaining non-ASCII
+      .replace(/\*{3} START OF.*?\*{3}/s, '') // Remove Gutenberg START marker
+      .replace(/\*{3} END OF.*?\*{3}/s, '') // Remove Gutenberg END marker
+      .trim();
+
+    // Step 6: Generate the PDF
+    const doc = new PDFDocument({ margin: 50 });
+    const streamPass = new stream.PassThrough();
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      `inline; filename="${book.title.replace(/[^a-z0-9]/gi, '_')}.pdf"`
+    );
+
+    doc.pipe(streamPass);
+    doc.font('Times-Roman').fontSize(12).text(textContent, {
+      align: 'left',
+      lineGap: 4
+    });
+    doc.end();
+
+    streamPass.pipe(res);
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to fetch book" });
+    console.error('PDF generation failed:', err);
+    res.status(500).json({ message: 'Failed to generate PDF' });
   }
-}
+};

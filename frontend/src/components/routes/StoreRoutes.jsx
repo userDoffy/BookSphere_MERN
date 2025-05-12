@@ -6,6 +6,7 @@ import Popular from "../pages/Store/Popular.jsx";
 import ForYou from "../pages/Store/Foryou.jsx";
 import BookDetails from "../pages/Store/BookDetails.jsx";
 import Cart from "../pages/Store/Cart.jsx";
+import SearchResults from "../pages/Store/SearchResults.jsx";
 
 const StoreRoutes = [
   <Route element={<SubNavLayout />}>
@@ -13,6 +14,7 @@ const StoreRoutes = [
     <Route path="/latest" element={<Latest />} />
     <Route path="/popular" element={<Popular />} />
     <Route path="/foryou" element={<ForYou />} />
+    <Route path="/search" element={<SearchResults />} />
     <Route path="/book/:id" element={<BookDetails />} />
     <Route path="/cart" element={<Cart />} />
   </Route>,

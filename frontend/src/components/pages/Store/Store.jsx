@@ -29,7 +29,7 @@ const Store = ({ books, totalPages, page, setPage }) => {
     }
     return 0;
   });
-
+  
   const renderStars = (rating) => {
     return [...Array(5)].map((_, i) => (
       <i

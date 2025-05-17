@@ -9,6 +9,7 @@ import {errorMiddleware} from './src/middlewares/errorMiddleware.js';
 import storeRoutes from './src/routes/storeRoutes.js';
 import orderRoutes from './src/routes/orderRoutes.js';
 import userRoutes from './src/routes/userRoutes.js';
+import adminRoutes from './src/routes/adminRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,6 +27,7 @@ app.use('/auth',authRoutes)
 app.use('/store',storeRoutes)
 app.use("/order",orderRoutes)
 app.use('/user',userRoutes)
+app.use('/admin',adminRoutes)
 app.use(errorMiddleware)
 app.use("/uploads", express.static("uploads"));
 

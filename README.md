@@ -1,4 +1,4 @@
-eBook Store with Reviews and Future extension plans
+eBook Store with Reviews and 2Factor email registration system with future enhanchements
 ![image](https://github.com/user-attachments/assets/06cdf7a0-c2b5-468f-8f73-96a84811af50)
 
 ![image](https://github.com/user-attachments/assets/e5782a73-0cc2-4656-8c53-b46912b89cb7)

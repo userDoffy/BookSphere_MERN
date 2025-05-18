@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000",  // your backend server
+  baseURL: "https://booksphere-mern.onrender.com",  // your backend server
   withCredentials: true,
 });
 

@@ -1,24 +1,25 @@
-import AppRoutes from "./components/routes/AppRoutes.jsx";
-import Header from "./components/layouts/Header.jsx";
-import Footer from "./components/layouts/Footer.jsx";
-import "./App.css";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import Header from "./components/layouts/Header";
+import Footer from "./components/layouts/Footer";
+import AppRoutes from "./components/routes/AppRoutes";
+import AdminRoutes from "../Admin/routes/AdminRoutes";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { Toaster } from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
+import "./App.css";
+
 import { useDispatch } from "react-redux";
-import { login, logout } from "./redux/auth/authSlice.js";
-import { getCurrentUser } from "./axios/authApi.js";
-import AdminRoutes from "../Admin/routes/AdminRoutes.jsx";
-import { useLocation } from "react-router-dom";
+import { login, logout } from "./redux/auth/authSlice";
+import { getCurrentUser } from "./axios/authApi";
 
 function App() {
-  const dispatch = useDispatch();
   const location = useLocation();
+  const dispatch = useDispatch();
   const isAdminRoute = location.pathname.startsWith("/admin");
-  
+
   useEffect(() => {
     const checkUserAuth = async () => {
       try {
@@ -32,21 +33,21 @@ function App() {
       }
     };
 
-    if(!isAdminRoute){
+    if (!isAdminRoute) {
       checkUserAuth();
     }
-    
-  }, [dispatch]);
-
+  }, [dispatch, isAdminRoute]);
 
   return (
     <ErrorBoundary>
       <div className="d-flex flex-column min-vh-100">
-    
         {!isAdminRoute && <Header />}
         <Toaster position="top-right" toastOptions={{ style: { marginTop: "30px" } }} />
         <main className="flex-grow-1">
-          {isAdminRoute ? <AdminRoutes /> : <AppRoutes />}
+          <Routes>
+            <Route path="/admin/*" element={<AdminRoutes />} />
+            <Route path="/*" element={<AppRoutes />} />
+          </Routes>
         </main>
         {!isAdminRoute && <Footer />}
       </div>

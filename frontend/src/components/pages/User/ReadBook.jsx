@@ -11,7 +11,7 @@ const ReadBook = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
-    setPdfUrl(`http://localhost:5000/user/getbookpdf/${id}`);
+    setPdfUrl(`https://booksphere-mern.onrender.com/user/getbookpdf/${id}`);
   }, [id]);
 
   const toggleFullscreen = () => {

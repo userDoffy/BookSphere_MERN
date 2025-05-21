@@ -169,7 +169,7 @@ export const getCurrentUser = async (req, res) => {
   }
   const {name,email,address,phone,role,isAccountVerified} = user
   
-  const host = req.protocol + "://" + req.get("host");
+  const host = "https://" + req.get("host");
   const profilepic = user.profilepic ? `${host}${user.profilepic}` : "";
 
   res.status(200).json({ status: "success", user: {_id, name,email,address,phone,role,profilepic,isAccountVerified } });

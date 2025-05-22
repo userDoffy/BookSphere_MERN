@@ -1,4 +1,9 @@
-eBook Store with Reviews and 2Factor email registration system with future enhanchements
+<h2>EBook Store with 2FA authentication System</h2>
+<br>
+<h3>Hosted on Vercel and Render(free tier so backend will take 50 seconds to load for first time)</h3>
+Additional Features Coming soon
+<br>
+
 ![image](https://github.com/user-attachments/assets/06cdf7a0-c2b5-468f-8f73-96a84811af50)
 
 ![image](https://github.com/user-attachments/assets/e5782a73-0cc2-4656-8c53-b46912b89cb7)
